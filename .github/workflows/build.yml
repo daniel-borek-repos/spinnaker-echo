@@ -41,11 +41,13 @@ jobs:
           test jacocoTestReport
       - name: SonarQube analysis
         if: ${{ !cancelled() }}
+        timeout-minutes: 45
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        # --info surfaces the scanner's own progress log (sensor names, upload).
         run: >
-          ./gradlew --init-script .github/sonar.init.gradle
+          ./gradlew --init-script .github/sonar.init.gradle --info
           -Dorg.gradle.jvmargs=-Xmx4g
           sonar
           -Dsonar.projectKey=daniel-borek-repos_spinnaker-echo
